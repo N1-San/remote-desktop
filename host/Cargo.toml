@@ -5,3 +5,5 @@ edition = "2024"
 
 [dependencies]
 protocol = { path = "../protocol" }
+xcap = "0.0.14"          # check crates.io for latest version number
+image = "0.25"
