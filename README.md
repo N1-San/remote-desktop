@@ -31,6 +31,24 @@ PIN auth) and screen capture in isolation, on the path to a Windows-to-Windows M
 - [ ] Linux ↔ Linux support
 - [ ] Cross-platform support
 
+## Prerequisites (Linux)
+
+Screen capture (`xcap`) depends on system libraries not included with Rust.
+Install these before building:
+
+**Fedora:**
+```bash
+sudo dnf install dbus-devel pkgconf-pkg-config libxcb-devel
+```
+
+**Debian/Ubuntu:**
+```bash
+sudo apt install libdbus-1-dev pkg-config libxcb1-dev
+```
+
+(Windows has no equivalent requirement — this only applies to building/running
+`host` on Linux.)
+
 ## Running locally
 
 Requires Rust (`rustup`) installed.
