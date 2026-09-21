@@ -1,3 +1,5 @@
+mod display;
+
 use protocol::{read_message, write_message, Message};
 use std::io::{self, Write};
 use std::net::TcpStream;
@@ -27,12 +29,9 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
             match read_message(&mut stream)? {
                 Message::Frame { width, height, data } => {
-                    println!(
-                        "Received frame: {}x{}, {} bytes",
-                        width,
-                        height,
-                        data.len()
-                    );
+                    println!("Received frame: {}x{}, {} bytes", width, height, data.len());
+                    println!("Opening display window (press Escape or close it to exit)...");
+                    display::show_frame(width, height, &data)?;
                 }
                 other => {
                     println!("Expected a Frame message, got: {other:?}");
@@ -46,10 +45,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             println!("Unexpected message: {other:?}");
         }
     }
-
-    println!("Press Enter to exit...");
-    let mut _pause = String::new();
-    io::stdin().read_line(&mut _pause)?;
 
     Ok(())
 }

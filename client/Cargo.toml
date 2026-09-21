@@ -5,3 +5,5 @@ edition = "2024"
 
 [dependencies]
 protocol = { path = "../protocol" }
+image = "0.25"
+minifb = "0.27"
