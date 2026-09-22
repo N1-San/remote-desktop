@@ -1,5 +1,6 @@
 mod display;
 
+use display::FrameDisplay;
 use protocol::{read_message, write_message, Message};
 use std::io::{self, Write};
 use std::net::TcpStream;
@@ -25,16 +26,30 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     match read_message(&mut stream)? {
         Message::AuthResult { success: true } => {
             println!("Auth result: true");
-            println!("Waiting for frame...");
+            println!("Waiting for stream...");
 
-            match read_message(&mut stream)? {
-                Message::Frame { width, height, data } => {
-                    println!("Received frame: {}x{}, {} bytes", width, height, data.len());
-                    println!("Opening display window (press Escape or close it to exit)...");
-                    display::show_frame(width, height, &data)?;
-                }
-                other => {
-                    println!("Expected a Frame message, got: {other:?}");
+            let mut display: Option<FrameDisplay> = None;
+
+            loop {
+                match read_message(&mut stream) {
+                    Ok(Message::Frame { width, height, data }) => {
+                        if display.is_none() {
+                            display = Some(FrameDisplay::new(width, height)?);
+                        }
+                        let d = display.as_mut().unwrap();
+                        if !d.is_open() {
+                            println!("Window closed by user, exiting.");
+                            break;
+                        }
+                        d.render_frame(width, height, &data)?;
+                    }
+                    Ok(other) => {
+                        println!("Unexpected message during stream: {other:?}");
+                    }
+                    Err(e) => {
+                        println!("Host disconnected or read failed: {e}");
+                        break;
+                    }
                 }
             }
         }
