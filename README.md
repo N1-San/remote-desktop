@@ -38,12 +38,12 @@ Install these before building:
 
 **Fedora:**
 ```bash
-sudo dnf install dbus-devel pkgconf-pkg-config libxcb-devel
+sudo dnf install dbus-devel pkgconf-pkg-config libxcb-devel libxdo-devel
 ```
 
 **Debian/Ubuntu:**
 ```bash
-sudo apt install libdbus-1-dev pkg-config libxcb1-dev
+sudo apt install libdbus-1-dev pkg-config libxcb1-dev libxdo-dev
 ```
 
 (Windows has no equivalent requirement — this only applies to building/running
